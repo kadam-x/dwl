@@ -32,11 +32,10 @@ static const Rule rules[] = {
     {"firefox_EXAMPLE", NULL, 1 << 8, 0, -1},
 };
 
-/* layout(s) */
+/* layout(s) — master/stack and floating only */
 static const Layout layouts[] = {
     {"[]=", tile},
     {"><>", NULL},
-    {"[M]", monocle},
 };
 
 /* monitors */
@@ -95,30 +94,14 @@ static const enum libinput_config_tap_button_map button_map =
     .v = (const char *[]) { "/bin/sh", "-c", cmd, NULL }                       \
   }
 
-#define BEMENU_OPTS                                                            \
-  "-l 10 "                                                                     \
-  "--fn \"monospace 16\" "                                                     \
-  "--nb \"#0c171b\" "                                                          \
-  "--fb \"#0c171b\" "                                                          \
-  "--tb \"#0c171b\" "                                                          \
-  "--ab \"#0c171b\" "                                                          \
-  "--hb \"#0c171b\" "                                                          \
-  "--sb \"#0c171b\" "                                                          \
-  "--scb \"#0c171b\""
+#define BEMENU_OPTS "-l 10 --fn \"monospace 16\""
 
 /* commands */
-static const char *dmenucmd[] = {"bemenu-run",   "-l",    "10",      "--fn",
-                                 "monospace 16", "--nb",  "#0c171b", "--fb",
-                                 "#0c171b",      "--tb",  "#0c171b", "--ab",
-                                 "#0c171b",      "--hb",  "#0c171b", "--sb",
-                                 "#0c171b",      "--scb", "#0c171b", NULL};
+static const char *dmenucmd[] = {"bemenu-run", "-l",           "10",
+                                 "--fn",       "monospace 16", NULL};
 static const char *termcmd[] = {"foot", NULL};
-
-static const char *menucmd[] = {"bemenu-run",   "-l",    "10",      "--fn",
-                                "monospace 16", "--nb",  "#0c171b", "--fb",
-                                "#0c171b",      "--tb",  "#0c171b", "--ab",
-                                "#0c171b",      "--hb",  "#0c171b", "--sb",
-                                "#0c171b",      "--scb", "#0c171b", NULL};
+static const char *menucmd[] = {"bemenu-run", "-l",           "10",
+                                "--fn",       "monospace 16", NULL};
 
 static const char *yazicmd[] = {"foot", "--app-id", "yazi", "-e", "yazi", NULL};
 
@@ -176,7 +159,6 @@ static const Key keys[] = {
 
     {MODKEY, XKB_KEY_t, setlayout, {.v = &layouts[0]}},
     {MODKEY, XKB_KEY_f, setlayout, {.v = &layouts[1]}},
-    {MODKEY, XKB_KEY_m, setlayout, {.v = &layouts[2]}},
     {MODKEY, XKB_KEY_space, setlayout, {0}},
 
     {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_space, togglefloating, {0}},
@@ -232,7 +214,7 @@ static const Key keys[] = {
 
 static const Button buttons[] = {
     {ClkLtSymbol, 0, BTN_LEFT, setlayout, {.v = &layouts[0]}},
-    {ClkLtSymbol, 0, BTN_RIGHT, setlayout, {.v = &layouts[2]}},
+    {ClkLtSymbol, 0, BTN_RIGHT, setlayout, {.v = &layouts[1]}},
 
     {ClkTitle, 0, BTN_MIDDLE, zoom, {0}},
 
