@@ -1,4 +1,3 @@
-/* Taken from https://github.com/djpohly/dwl/issues/466 */
 #define COLOR(hex)                                                             \
   {((hex >> 24) & 0xFF) / 255.0f, ((hex >> 16) & 0xFF) / 255.0f,               \
    ((hex >> 8) & 0xFF) / 255.0f, (hex & 0xFF) / 255.0f}
@@ -6,7 +5,7 @@
 /* appearance */
 static const int sloppyfocus = 1;
 static const int bypass_surface_visibility = 0;
-static const unsigned int borderpx = 1;
+static const unsigned int borderpx = 3;
 static const unsigned int systrayspacing = 2;
 static const int showsystray = 1;
 static const int showbar = 1;
@@ -30,9 +29,11 @@ static int log_level = WLR_ERROR;
 static const Rule rules[] = {
     {"Gimp_EXAMPLE", NULL, 0, 1, -1},
     {"firefox_EXAMPLE", NULL, 1 << 8, 0, -1},
+    {"yazi", NULL, 0, 1, -1},
+
 };
 
-/* layout(s) — master/stack and floating only */
+/* layout(s) */
 static const Layout layouts[] = {
     {"[]=", tile},
     {"><>", NULL},
@@ -80,13 +81,15 @@ static const enum libinput_config_tap_button_map button_map =
 /* MODKEY */
 #define MODKEY WLR_MODIFIER_LOGO
 
+static void tagandview(const Arg *arg) {
+  tag(arg);
+  view(arg);
+}
+
 #define TAGKEYS(KEY, SKEY, TAG)                                                \
   {MODKEY, KEY, view, {.ui = 1 << TAG}},                                       \
-      {MODKEY | WLR_MODIFIER_CTRL, KEY, toggleview, {.ui = 1 << TAG}},         \
       {MODKEY | WLR_MODIFIER_SHIFT, SKEY, tag, {.ui = 1 << TAG}}, {            \
-    MODKEY | WLR_MODIFIER_CTRL | WLR_MODIFIER_SHIFT, SKEY, toggletag, {        \
-      .ui = 1 << TAG                                                           \
-    }                                                                          \
+    MODKEY | WLR_MODIFIER_CTRL, KEY, tagandview, { .ui = 1 << TAG }            \
   }
 
 #define SHCMD(cmd)                                                             \
@@ -99,7 +102,9 @@ static const enum libinput_config_tap_button_map button_map =
 /* commands */
 static const char *dmenucmd[] = {"bemenu-run", "-l",           "10",
                                  "--fn",       "monospace 16", NULL};
+
 static const char *termcmd[] = {"foot", NULL};
+
 static const char *menucmd[] = {"bemenu-run", "-l",           "10",
                                 "--fn",       "monospace 16", NULL};
 
@@ -157,8 +162,7 @@ static const Key keys[] = {
     {MODKEY, XKB_KEY_Tab, view, {0}},
     {MODKEY, XKB_KEY_q, killclient, {0}},
 
-    {MODKEY, XKB_KEY_t, setlayout, {.v = &layouts[0]}},
-    {MODKEY, XKB_KEY_f, setlayout, {.v = &layouts[1]}},
+    {MODKEY, XKB_KEY_f, togglefloating, {0}},
     {MODKEY, XKB_KEY_space, setlayout, {0}},
 
     {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_space, togglefloating, {0}},
