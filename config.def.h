@@ -15,8 +15,7 @@ static const float rootcolor[] = COLOR(0x000000ff);
 static const float fullscreen_bg[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 /* colors */
-#define COLOR_MAIN 0x0b2c38ff
-#define COLOR_DARK 0x0f0f0fff
+#define COLOR_MAIN 0x4c9e85ff
 #define COLOR_FG 0xbbbbbbff
 #define COLOR_BG 0x0c171bff
 #define COLOR_URGENT 0x770000ff
@@ -26,7 +25,7 @@ static uint32_t colors[][3] = {
         {
             COLOR_FG,
             COLOR_BG,
-            COLOR_DARK,
+            COLOR_BG,
         },
     [SchemeSel] =
         {
