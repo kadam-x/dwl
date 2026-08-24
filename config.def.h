@@ -15,6 +15,7 @@ static const int topbar = 1;
 static const char *fonts[] = { "monospace:size=15" };
 static const float rootcolor[] = COLOR(0x000000ff);
 static const float fullscreen_bg[] = COLOR(0x000000ff);
+static const int respect_monitor_reserved_area = 0; /* 1 to center while respecting the monitor's reserved area, 0 to monitor area */
 
 /* colors */
 static uint32_t colors[][3] = {
@@ -30,7 +31,9 @@ static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 static int log_level = WLR_ERROR;
 
 static const Rule rules[] = {
-	{ "yazi-EXAMPLE", NULL, 0, 1, -1 },
+	/* app_id        title  tags mask  isfloating  monitor  x  y  width  height */
+	{ "yazi",        NULL,       0,         1,       -1,      0, 0, 0.55f, 0.8f },
+	{ "pulsemixer",  NULL,       0,         1,       -1,      0, 0, 0.35f, 0.35f },
 };
 
 /* layout(s) */

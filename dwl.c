@@ -283,6 +283,7 @@ typedef struct {
   uint32_t tags;
   int isfloating;
   int monitor;
+  float x, y, w, h;
 } Rule;
 
 typedef struct {
@@ -565,6 +566,9 @@ void applyrules(Client *c) {
   int i;
   const Rule *r;
   Monitor *mon = selmon, *m;
+  struct wlr_box b;
+  int newx, newy, neww, newh;
+  int apply_resize = 0;
 
   appid = client_get_appid(c);
   title = client_get_title(c);
@@ -579,11 +583,41 @@ void applyrules(Client *c) {
         if (r->monitor == i++)
           mon = m;
       }
+      if (c->isfloating || !mon->lt[mon->sellt]->arrange) {
+        /* client is floating or in floating layout */
+        b = respect_monitor_reserved_area ? mon->w : mon->m;
+        neww =
+            (int)round(r->w ? (r->w <= 1 ? b.width * r->w : r->w) : c->geom.width);
+        newh =
+            (int)round(r->h ? (r->h <= 1 ? b.height * r->h : r->h) : c->geom.height);
+        newx = (int)round(
+            r->x ? (r->x > 0 ? (r->x <= 1 ? b.width * r->x + b.x : r->x + b.x)
+                             : (r->x >= -1 ? b.width + b.width * r->x + b.x - neww
+                                           : b.width + r->x + b.x - neww))
+                 : c->geom.x);
+        newy = (int)round(
+            r->y ? (r->y > 0 ? (r->y <= 1 ? b.height * r->y + b.y : r->y + b.y)
+                             : (r->y >= -1 ? b.height + b.height * r->y + b.y - newh
+                                           : b.height + r->y + b.y - newh))
+                 : c->geom.y);
+        apply_resize = 1;
+      }
     }
   }
 
   c->isfloating |= client_is_float_type(c);
   setmon(c, mon, newtags);
+
+  if (apply_resize) {
+    resize(c,
+           (struct wlr_box){
+               .x = newx,
+               .y = newy,
+               .width = neww,
+               .height = newh,
+           },
+           1);
+  }
 }
 
 void arrange(Monitor *m) {
@@ -1991,6 +2025,7 @@ void mapnotify(struct wl_listener *listener, void *data) {
   Client *w, *c = wl_container_of(listener, c, map);
   Monitor *m;
   int i;
+  struct wlr_box b;
 
   /* Create scene tree for this client and its border */
   c->scene = client_surface(c)->data = wlr_scene_tree_create(layers[LyrTile]);
@@ -2044,6 +2079,15 @@ void mapnotify(struct wl_listener *listener, void *data) {
     setmon(c, p->mon, p->tags);
   } else {
     applyrules(c);
+  }
+
+  if (c->isfloating || !c->mon->lt[c->mon->sellt]->arrange) {
+    /* client is floating or in floating layout */
+    b = respect_monitor_reserved_area ? c->mon->w : c->mon->m;
+    c->geom.x =
+        c->geom.x == 0 ? (b.width - c->geom.width) / 2 + b.x : c->geom.x;
+    c->geom.y =
+        c->geom.y == 0 ? (b.height - c->geom.height) / 2 + b.y : c->geom.y;
   }
   drawbars();
 
