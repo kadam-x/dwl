@@ -19,9 +19,9 @@ static const int respect_monitor_reserved_area = 0; /* 1 to center while respect
 
 /* colors */
 static uint32_t colors[][3] = {
-	[SchemeNorm] = { 0xbbbbbbff, 0x0c171bff, 0x0c171bff },
-	[SchemeSel]  = { 0xffffffff, 0x4c9e85ff, 0x4c9e85ff },
-	[SchemeUrg]  = { 0xffffffff, 0x0c171bff, 0x770000ff },
+	[SchemeNorm] = { 0xbbbbbbff, 0x0d0e17ff, 0x0d0e17ff },
+	[SchemeSel]  = { 0xffffffff, 0x31748fff, 0x31748fff },
+	[SchemeUrg]  = { 0xffffffff, 0x0d0e17ff, 0x770000ff },
 };
 
 /* tagging */
@@ -90,9 +90,9 @@ tagandview(const Arg *arg)
 #define SHCMD(cmd) { .v = (const char *[]){ "/bin/sh", "-c", cmd, NULL } }
 
 #define BEMENU_OPTS                                                        \
-	"-l 10 --fn \"monospace 16\" --nb \"#0c171b\" --fb \"#0c171b\" "       \
-	"--tb \"#0c171b\" --ab \"#0c171b\" --hb \"#0b2c38\" "                  \
-	"--sb \"#0b2c38\" --scb \"#0b2c38\""
+	"-l 10 --fn \"monospace 16\" --nb \"#0d0e17\" --fb \"#0d0e17\" "       \
+	"--tb \"#0d0e17\" --ab \"#0d0e17\" --hb \"#25596e\" "                  \
+	"--sb \"#25596e\" --scb \"#25596e\""
 
 /* commands */
 static const char *termcmd[] = { "foot", NULL };
